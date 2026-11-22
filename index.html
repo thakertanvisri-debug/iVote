@@ -1,0 +1,944 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>iVOTE - Online Voting System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eaf3ff;
+    color: #12366b;
+}
+
+/* HEADER */
+
+header {
+    min-height: 105px;
+    background: linear-gradient(110deg, #06316b, #0b3977);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 4%;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.logo {
+    font-size: 55px;
+}
+
+.logo-line {
+    height: 65px;
+    width: 2px;
+    background: white;
+}
+
+.logo-area h1 {
+    font-size: clamp(23px, 3.5vw, 42px);
+}
+
+.tagline {
+    font-size: clamp(13px, 2vw, 25px);
+    font-style: italic;
+    font-family: Georgia, serif;
+}
+
+/* MAIN BACKGROUND */
+
+.main-section {
+    min-height: 790px;
+    padding: 35px 4%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(ellipse at center, #ffffff 20%, #e9f4ff 75%);
+}
+
+/* TRICOLOUR DECORATION */
+
+.tricolor {
+    position: absolute;
+    width: 650px;
+    height: 180px;
+    border-radius: 50%;
+    opacity: 0.85;
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+.tricolor.left {
+    left: -310px;
+    top: 90px;
+    transform: rotate(-28deg);
+    border-top: 32px solid #ff941e;
+    border-bottom: 32px solid #159447;
+}
+
+.tricolor.right {
+    right: -310px;
+    top: 100px;
+    transform: rotate(28deg);
+    border-top: 32px solid #ff941e;
+    border-bottom: 32px solid #159447;
+}
+
+/* DECORATIVE SIDE CONTENT */
+
+.left-art {
+    position: absolute;
+    left: 3%;
+    bottom: 75px;
+    font-size: clamp(100px, 15vw, 200px);
+    opacity: 0.85;
+    z-index: 1;
+}
+
+.right-art {
+    position: absolute;
+    right: 3%;
+    top: 43%;
+    max-width: 230px;
+    text-align: center;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: clamp(21px, 2.5vw, 34px);
+    line-height: 1.5;
+    color: #103a78;
+    z-index: 1;
+}
+
+.right-art span {
+    display: block;
+    margin-top: 12px;
+    color: #188d4c;
+    font-size: 24px;
+}
+
+/* MAIN CARD */
+
+.container {
+    width: 100%;
+    max-width: 870px;
+    background: rgba(255,255,255,0.96);
+    padding: 35px 7%;
+    border-radius: 30px;
+    box-shadow: 0 12px 35px rgba(18,57,110,0.17);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    border: 1px solid #d9e8fa;
+}
+
+/* ASHOKA CHAKRA */
+
+.chakra {
+    width: 95px;
+    height: 95px;
+    border: 6px solid #123e83;
+    border-radius: 50%;
+    margin: -48px auto 20px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 67px;
+    color: #123e83;
+    box-shadow: 0 3px 10px #c9d9ef;
+}
+
+.tricolor-line {
+    height: 13px;
+    width: 75%;
+    margin: 0 auto 22px;
+    background: linear-gradient(
+        to bottom,
+        #ff8c18 0%,
+        #ff8c18 33%,
+        white 33%,
+        white 66%,
+        #159447 66%
+    );
+    border-radius: 20px;
+}
+
+.container h2 {
+    font-size: clamp(27px, 4vw, 43px);
+    color: #103775;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.welcome {
+    font-family: Georgia, serif;
+    font-size: clamp(17px, 2.4vw, 26px);
+    font-style: italic;
+    color: #173d77;
+    margin-bottom: 15px;
+}
+
+.small-line {
+    width: 150px;
+    height: 4px;
+    background: #1763d6;
+    margin: 20px auto 28px;
+    border-radius: 10px;
+}
+
+/* MENU BUTTONS */
+
+.menu-btn {
+    width: 100%;
+    max-width: 560px;
+    min-height: 82px;
+    margin: 14px auto;
+    border: none;
+    border-radius: 23px;
+    color: white;
+    font-size: clamp(17px, 2.4vw, 25px);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    transition: 0.3s;
+    box-shadow: 0 6px 13px rgba(0,0,0,0.15);
+}
+
+.menu-btn:hover {
+    transform: translateY(-4px) scale(1.015);
+    filter: brightness(1.08);
+}
+
+.menu-icon {
+    width: 105px;
+    font-size: 38px;
+    text-align: center;
+}
+
+.menu-divider {
+    height: 50px;
+    width: 2px;
+    background: rgba(255,255,255,0.8);
+    margin: 0 25px 0 0;
+}
+
+.menu-text {
+    flex: 1;
+    text-align: left;
+}
+
+.arrow {
+    font-size: 38px;
+    padding-left: 12px;
+}
+
+.register {
+    background: linear-gradient(110deg, #0752c7, #0750bd);
+}
+
+.vote {
+    background: linear-gradient(110deg, #159a40, #087e31);
+}
+
+.admin {
+    background: linear-gradient(110deg, #6633bd, #49209d);
+}
+
+.exit {
+    background: linear-gradient(110deg, #e52b28, #c91919);
+}
+
+/* FOOTER */
+
+footer {
+    background: #06316b;
+    color: white;
+    min-height: 75px;
+    padding: 22px 15px;
+    text-align: center;
+    font-size: 17px;
+    letter-spacing: 0.4px;
+}
+
+footer span {
+    margin: 0 13px;
+}
+
+/* MODALS */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 20;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 440px;
+    padding: 30px;
+    border-radius: 18px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-box h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #103775;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #555;
+}
+
+.modal-box label {
+    display: block;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 22px;
+    background: #1454b7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #0b347a;
+}
+
+.candidate {
+    background: #f0f5ff;
+    border: 1px solid #d6e3f7;
+    padding: 15px;
+    margin-top: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.candidate input {
+    width: auto;
+    margin-right: 10px;
+}
+
+.result {
+    background: #edf4ff;
+    padding: 16px;
+    margin: 12px 0;
+    border-radius: 9px;
+    line-height: 2;
+}
+
+/* MOBILE */
+
+@media(max-width: 850px) {
+    .left-art,
+    .right-art {
+        display: none;
+    }
+
+    .main-section {
+        padding: 60px 5%;
+    }
+
+    .container {
+        max-width: 650px;
+    }
+}
+
+@media(max-width: 500px) {
+    header {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .logo-area {
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 37px;
+    }
+
+    .logo-line {
+        height: 45px;
+    }
+
+    .tagline {
+        display: none;
+    }
+
+    .container {
+        padding: 30px 18px;
+        border-radius: 20px;
+    }
+
+    .menu-btn {
+        min-height: 65px;
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    .menu-icon {
+        width: 60px;
+        font-size: 27px;
+    }
+
+    .menu-divider {
+        margin-right: 13px;
+        height: 40px;
+    }
+
+    .arrow {
+        font-size: 28px;
+    }
+
+    footer {
+        font-size: 13px;
+        line-height: 2;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo-area">
+        <div class="logo">🗳️</div>
+        <div class="logo-line"></div>
+        <h1>Online Voting System</h1>
+    </div>
+
+    <div class="tagline">
+        Your Vote &nbsp; • &nbsp; Our Democracy
+    </div>
+
+</header>
+
+<!-- MAIN SECTION -->
+
+<main class="main-section">
+
+    <div class="tricolor left"></div>
+    <div class="tricolor right"></div>
+
+    <!-- LEFT DECORATION -->
+
+    <div class="left-art">🗳️</div>
+
+    <!-- RIGHT SLOGAN -->
+
+    <div class="right-art">
+        Stronger<br>
+        Democracy<br>
+        Brighter Future
+        <span>━━━━━━━</span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+
+    <div class="container">
+
+        <div class="chakra">☸</div>
+
+        <div class="tricolor-line"></div>
+
+        <h2>iVOTE - ONLINE VOTING SYSTEM</h2>
+
+        <p class="welcome">
+            Welcome to  Online Voting System!
+        </p>
+
+        <div class="small-line"></div>
+
+        <!-- REGISTER -->
+
+        <button class="menu-btn register"
+            onclick="openModal('registerModal')">
+
+            <span class="menu-icon">👥</span>
+            <span class="menu-divider"></span>
+            <span class="menu-text">Register Voter</span>
+            <span class="arrow">❯</span>
+
+        </button>
+
+        <!-- VOTE -->
+
+        <button class="menu-btn vote"
+            onclick="openModal('voteModal')">
+
+            <span class="menu-icon">🗳️</span>
+            <span class="menu-divider"></span>
+            <span class="menu-text">Cast Vote</span>
+            <span class="arrow">❯</span>
+
+        </button>
+
+        <!-- ADMIN -->
+
+        <button class="menu-btn admin"
+            onclick="openModal('adminModal')">
+
+            <span class="menu-icon">🛡️</span>
+            <span class="menu-divider"></span>
+            <span class="menu-text">Admin Login</span>
+            <span class="arrow">❯</span>
+
+        </button>
+
+        <!-- EXIT -->
+
+        <button class="menu-btn exit"
+            onclick="exitWebsite()">
+
+            <span class="menu-icon">🚪</span>
+            <span class="menu-divider"></span>
+            <span class="menu-text">Exit</span>
+            <span class="arrow">❯</span>
+
+        </button>
+
+    </div>
+
+</main>
+
+<!-- FOOTER -->
+
+<footer>
+    🛡️ Vote Securely
+    <span>|</span>
+    Vote Responsibly
+    <span>|</span>
+    Build a Better Nation
+</footer>
+
+<!-- REGISTRATION MODAL -->
+
+<div class="modal" id="registerModal">
+
+    <div class="modal-box">
+
+        <button class="close"
+            onclick="closeModal('registerModal')">×</button>
+
+        <h2>👤 Voter Registration</h2>
+
+        <form id="registerForm">
+
+            <label>Voter ID</label>
+            <input type="text" id="regId"
+                placeholder="Enter voter ID" required>
+
+            <label>Full Name</label>
+            <input type="text" id="regName"
+                placeholder="Enter your name" required>
+
+            <label>Age</label>
+            <input type="number" id="regAge"
+                placeholder="Enter your age"
+                min="1" required>
+
+            <button class="submit-btn" type="submit">
+                Register Voter
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- VOTING MODAL -->
+
+<div class="modal" id="voteModal">
+
+    <div class="modal-box">
+
+        <button class="close"
+            onclick="closeModal('voteModal')">×</button>
+
+        <h2>🗳️ Cast Your Vote</h2>
+
+        <form id="voteForm">
+
+            <label>Voter ID</label>
+            <input type="text" id="voteId"
+                placeholder="Enter registered voter ID" required>
+
+            <label>Select Candidate</label>
+
+            <label class="candidate">
+                <input type="radio" name="candidate"
+                    value="Candidate A" required>
+                Candidate A
+            </label>
+
+            <label class="candidate">
+                <input type="radio" name="candidate"
+                    value="Candidate B">
+                Candidate B
+            </label>
+
+            <button class="submit-btn" type="submit">
+                Submit Vote
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+
+<div class="modal" id="adminModal">
+
+    <div class="modal-box">
+
+        <button class="close"
+            onclick="closeModal('adminModal')">×</button>
+
+        <h2>🔐 Admin Login</h2>
+
+        <form id="adminForm">
+
+            <label>Username</label>
+            <input type="text" id="adminUser"
+                placeholder="Enter username" required>
+
+            <label>Password</label>
+            <input type="password" id="adminPass"
+                placeholder="Enter password" required>
+
+            <button class="submit-btn" type="submit">
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- RESULTS MODAL -->
+
+<div class="modal" id="resultsModal">
+
+    <div class="modal-box">
+
+        <button class="close"
+            onclick="closeModal('resultsModal')">×</button>
+
+        <h2>📊 Voting Results</h2>
+
+        <div id="resultsContent"></div>
+
+        <button class="submit-btn"
+            onclick="closeModal('resultsModal')">
+            Close Dashboard
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+// LOAD SAVED DATA
+
+let voters = JSON.parse(
+    localStorage.getItem("voters") || "{}"
+);
+
+let votes = JSON.parse(
+    localStorage.getItem("votes") || "{}"
+);
+
+// SAVE DATA
+
+function saveData() {
+
+    localStorage.setItem("voters", JSON.stringify(voters));
+
+    localStorage.setItem("votes", JSON.stringify(votes));
+
+}
+
+// OPEN MODAL
+
+function openModal(id) {
+
+    document.getElementById(id).style.display = "flex";
+
+}
+
+// CLOSE MODAL
+
+function closeModal(id) {
+
+    document.getElementById(id).style.display = "none";
+
+}
+
+// CLICK OUTSIDE TO CLOSE
+
+window.addEventListener("click", function(event) {
+
+    if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+    }
+
+});
+
+// VOTER REGISTRATION
+
+document.getElementById("registerForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let id = document.getElementById("regId")
+        .value.trim();
+
+    let name = document.getElementById("regName")
+        .value.trim();
+
+    let age = Number(
+        document.getElementById("regAge").value
+    );
+
+    if (age < 18) {
+
+        alert("You must be 18 or above to register!");
+        return;
+
+    }
+
+    if (voters[id]) {
+
+        alert("Voter ID already registered!");
+        return;
+
+    }
+
+    voters[id] = {
+        name: name,
+        age: age,
+        voted: false
+    };
+
+    saveData();
+
+    alert("Registration successful!");
+
+    this.reset();
+
+    closeModal("registerModal");
+
+});
+
+// CAST VOTE
+
+document.getElementById("voteForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let id = document.getElementById("voteId")
+        .value.trim();
+
+    let selected = document.querySelector(
+        'input[name="candidate"]:checked'
+    );
+
+    if (!voters[id]) {
+
+        alert("Please register first!");
+        return;
+
+    }
+
+    if (voters[id].voted) {
+
+        alert("You have already voted!");
+        return;
+
+    }
+
+    if (!selected) {
+
+        alert("Please select a candidate!");
+        return;
+
+    }
+
+    let candidate = selected.value;
+
+    votes[candidate] = (votes[candidate] || 0) + 1;
+
+    voters[id].voted = true;
+
+    saveData();
+
+    alert("Your vote has been recorded successfully!");
+
+    this.reset();
+
+    closeModal("voteModal");
+
+});
+
+// ADMIN LOGIN
+
+document.getElementById("adminForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    let username = document.getElementById("adminUser").value;
+    let password = document.getElementById("adminPass").value;
+
+    if (username === "admin" && password === "1234") {
+
+        alert("Admin Login Successful!");
+
+        this.reset();
+
+        closeModal("adminModal");
+
+        showResults();
+
+    } else {
+
+        alert("Invalid Admin Username or Password!");
+
+    }
+
+});
+
+// SHOW RESULTS
+
+function showResults() {
+
+    let candidateA = votes["Candidate A"] || 0;
+    let candidateB = votes["Candidate B"] || 0;
+
+    let totalVotes = candidateA + candidateB;
+
+    let totalVoters = Object.keys(voters).length;
+
+    let winner;
+
+    if (candidateA > candidateB) {
+        winner = "Candidate A";
+    } else if (candidateB > candidateA) {
+        winner = "Candidate B";
+    } else {
+        winner = "Tie!";
+    }
+
+    document.getElementById("resultsContent").innerHTML = `
+
+        <div class="result">
+            <h3>Registered Voters</h3>
+            <h2>${totalVoters}</h2>
+        </div>
+
+        <div class="result">
+            <h3>Total Votes</h3>
+            <h2>${totalVotes}</h2>
+        </div>
+
+        <div class="result">
+            <h3>Candidate A</h3>
+            <h2>${candidateA}</h2>
+        </div>
+
+        <div class="result">
+            <h3>Candidate B</h3>
+            <h2>${candidateB}</h2>
+        </div>
+
+        <div class="result">
+            <h3>🏆 Election Winner</h3>
+            <h2>${winner}</h2>
+        </div>
+
+    `;
+
+    openModal("resultsModal");
+
+}
+
+// EXIT
+
+function exitWebsite() {
+
+    if (confirm("Are you sure you want to exit?")) {
+
+        alert("Thank you for using Online Voting System!");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

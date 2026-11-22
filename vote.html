@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Voting System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f7;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            background: white;
+            max-width: 750px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #ccc;
+        }
+
+        input {
+            padding: 12px;
+            width: 80%;
+            margin: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 8px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #f1f5f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .reset {
+            background: red;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .bar {
+            height: 18px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+        }
+
+        .blue {
+            background: #2563eb;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 5px;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        .voted {
+            color: green;
+            font-weight: bold;
+        }
+
+        .notvoted {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🗳️ Online Voting System</h1>
+
+    <hr>
+
+    <h2>Voter Registration</h2>
+
+    <input type="text" id="voterName"
+           placeholder="Enter Your Name">
+
+    <input type="text" id="voterID"
+           placeholder="Enter Unique Voter ID">
+
+    <br>
+
+    <button onclick="registerVoter()">Register</button>
+
+    <p id="registerMessage"></p>
+
+    <div id="votingSection" class="hidden">
+
+        <h2>Cast Your Vote</h2>
+
+        <button onclick="castVote('A')">
+            Candidate A
+        </button>
+
+        <button onclick="castVote('B')">
+            Candidate B
+        </button>
+
+        <p id="voteMessage"></p>
+
+    </div>
+
+    <hr>
+
+    <h2>Admin Login</h2>
+
+    <input type="text" id="username"
+           placeholder="Admin Username">
+
+    <input type="password" id="password"
+           placeholder="Admin Password">
+
+    <br>
+
+    <button onclick="adminLogin()">Login</button>
+
+    <p id="loginMessage"></p>
+
+    <div id="adminPanel" class="hidden">
+
+        <hr>
+
+        <h2>📊 Voting Dashboard</h2>
+
+        <div class="card">
+            <h3>Total Votes</h3>
+            <h1 id="totalVotes">0</h1>
+        </div>
+
+        <div class="card">
+            <h3>Candidate A</h3>
+            <h2 id="voteA">0</h2>
+            <p id="percentA">0%</p>
+
+            <div class="bar">
+                <div id="barA" class="progress blue"
+                     style="width:0%"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Candidate B</h3>
+            <h2 id="voteB">0</h2>
+            <p id="percentB">0%</p>
+
+            <div class="bar">
+                <div id="barB" class="progress green"
+                     style="width:0%"></div>
+            </div>
+        </div>
+
+        <h2 id="winner">No Votes Yet</h2>
+
+        <hr>
+
+        <h2>👥 Registered Voters</h2>
+
+        <h3>
+            Total Registered:
+            <span id="totalVoters">0</span>
+        </h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Voter ID</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="voterTable"></tbody>
+        </table>
+
+        <br>
+
+        <button class="reset" onclick="resetVotes()">
+            Reset All Records
+        </button>
+
+        <button onclick="adminLogout()">Logout</button>
+
+    </div>
+
+</div>
+
+<script>
+
+// LOAD SAVED DATA
+
+let votesA = Number(localStorage.getItem("votesA")) || 0;
+let votesB = Number(localStorage.getItem("votesB")) || 0;
+
+let voters = JSON.parse(localStorage.getItem("voters")) || [];
+
+let currentVoter = null;
+
+
+// VOTER REGISTRATION
+
+function registerVoter() {
+
+    let name = document.getElementById("voterName").value.trim();
+    let id = document.getElementById("voterID").value.trim();
+
+    if (!name || !id) {
+        alert("Please enter your name and voter ID!");
+        return;
+    }
+
+    let existing = voters.find(
+        voter => voter.id.toLowerCase() === id.toLowerCase()
+    );
+
+    if (existing) {
+        alert("Voter ID already registered!");
+        return;
+    }
+
+    let voter = {
+        name: name,
+        id: id,
+        hasVoted: false
+    };
+
+    voters.push(voter);
+
+    localStorage.setItem("voters", JSON.stringify(voters));
+
+    currentVoter = voter;
+
+    document.getElementById("registerMessage").innerHTML =
+        "Registration Successful! Welcome " + name;
+
+    document.getElementById("votingSection")
+        .classList.remove("hidden");
+
+    document.getElementById("voterName").value = "";
+    document.getElementById("voterID").value = "";
+}
+
+
+// CAST VOTE
+
+function castVote(candidate) {
+
+    if (!currentVoter) {
+        alert("Please register first!");
+        return;
+    }
+
+    if (currentVoter.hasVoted) {
+        alert("You have already voted!");
+        return;
+    }
+
+    if (candidate === "A") {
+        votesA++;
+    } else {
+        votesB++;
+    }
+
+    currentVoter.hasVoted = true;
+
+    localStorage.setItem("votesA", votesA);
+    localStorage.setItem("votesB", votesB);
+    localStorage.setItem("voters", JSON.stringify(voters));
+
+    document.getElementById("voteMessage").innerHTML =
+        "Thank you! Your vote has been recorded.";
+
+    document.getElementById("votingSection")
+        .classList.add("hidden");
+
+    updateDashboard();
+}
+
+
+// ADMIN LOGIN
+
+function adminLogin() {
+
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if (user === "admin" && pass === "1234") {
+
+        document.getElementById("adminPanel")
+            .classList.remove("hidden");
+
+        document.getElementById("loginMessage").innerHTML =
+            "Login Successful!";
+
+        updateDashboard();
+
+    } else {
+
+        document.getElementById("loginMessage").innerHTML =
+            "Invalid Username or Password!";
+
+    }
+}
+
+
+// UPDATE DASHBOARD
+
+function updateDashboard() {
+
+    let total = votesA + votesB;
+
+    let percentA = total ? votesA / total * 100 : 0;
+    let percentB = total ? votesB / total * 100 : 0;
+
+    document.getElementById("totalVotes").innerHTML = total;
+
+    document.getElementById("voteA").innerHTML = votesA;
+    document.getElementById("voteB").innerHTML = votesB;
+
+    document.getElementById("percentA").innerHTML =
+        percentA.toFixed(2) + "%";
+
+    document.getElementById("percentB").innerHTML =
+        percentB.toFixed(2) + "%";
+
+    document.getElementById("barA").style.width =
+        percentA + "%";
+
+    document.getElementById("barB").style.width =
+        percentB + "%";
+
+    if (total === 0) {
+        document.getElementById("winner").innerHTML =
+            "No Votes Yet";
+    } else if (votesA > votesB) {
+        document.getElementById("winner").innerHTML =
+            "Candidate A is Winning!";
+    } else if (votesB > votesA) {
+        document.getElementById("winner").innerHTML =
+            "Candidate B is Winning!";
+    } else {
+        document.getElementById("winner").innerHTML =
+            "Both Candidates are Tied!";
+    }
+
+    displayVoters();
+}
+
+
+// DISPLAY VOTERS
+
+function displayVoters() {
+
+    document.getElementById("totalVoters").innerHTML =
+        voters.length;
+
+    let table = document.getElementById("voterTable");
+
+    table.innerHTML = "";
+
+    voters.forEach(function(voter) {
+
+        let row = table.insertRow();
+
+        row.insertCell(0).textContent = voter.name;
+        row.insertCell(1).textContent = voter.id;
+
+        let status = row.insertCell(2);
+
+        status.textContent =
+            voter.hasVoted ? "Voted" : "Not Voted";
+
+        status.className =
+            voter.hasVoted ? "voted" : "notvoted";
+
+    });
+}
+
+
+// RESET RECORDS
+
+function resetVotes() {
+
+    if (confirm("Are you sure you want to reset all records?")) {
+
+        votesA = 0;
+        votesB = 0;
+        voters = [];
+        currentVoter = null;
+
+        localStorage.removeItem("votesA");
+        localStorage.removeItem("votesB");
+        localStorage.removeItem("voters");
+
+        document.getElementById("votingSection")
+            .classList.add("hidden");
+
+        document.getElementById("registerMessage").innerHTML =
+            "All records have been reset.";
+
+        document.getElementById("voteMessage").innerHTML = "";
+
+        updateDashboard();
+    }
+}
+
+
+// ADMIN LOGOUT
+
+function adminLogout() {
+
+    document.getElementById("adminPanel")
+        .classList.add("hidden");
+
+    document.getElementById("loginMessage").innerHTML =
+        "Admin Logged Out!";
+
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+}
+
+
+// INITIALIZE
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>

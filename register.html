@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voter Registration</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f7;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            max-width: 400px;
+            margin: auto;
+            border-radius: 12px;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px;
+        }
+
+        button {
+            background: #244a8f;
+            color: white;
+            padding: 12px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h2>Voter Registration</h2>
+
+    <form onsubmit="registerVoter(event)">
+        <input type="text" id="name"
+               placeholder="Enter your name" required>
+
+        <input type="number" id="age"
+               placeholder="Enter your age" required>
+
+        <input type="text" id="voterId"
+               placeholder="Enter voter ID" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        function registerVoter(event) {
+            event.preventDefault();
+
+            let name = document.getElementById("name").value;
+            let age = Number(document.getElementById("age").value);
+            let voterId = document.getElementById("voterId").value;
+
+            if (age < 18) {
+                document.getElementById("message").innerText =
+                    "You are not eligible to register.";
+            } else {
+                document.getElementById("message").innerText =
+                    "Registration successful! Welcome " + name;
+            }
+        }
+    </script>
+
+</div>
+</body>
+</html>
